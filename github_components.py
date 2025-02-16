@@ -13,8 +13,8 @@ class GithubAuthorize(Component):
     client: OutArg[Github]
 
     def execute(self, ctx) -> None:
-        # Get GitHub token from environment variable
-        token = os.getenv("GITHUB_TOKEN")
+        # Get GitHub token from self.token.value if provided, otherwise from environment variable
+        token = self.token.value if self.token.value else os.getenv("GITHUB_TOKEN")
         if not token:
             raise ValueError("GITHUB_TOKEN environment variable is not set.")
         
