@@ -9,6 +9,7 @@ class GithubAuthorize(Component):
     ##### outPorts:
     - client (Github): The authenticated GitHub client.
     """
+    # Add a secret InArg to optionally provide a github topken. AI!
     client: OutArg[Github]
 
     def execute(self, ctx) -> None:
