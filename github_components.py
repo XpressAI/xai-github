@@ -1,7 +1,19 @@
 import os
 from xai_components.base import InArg, OutArg, Component, xai_component
 from github import Github
+ 
 
+def get_github_client(ctx, client=None, token=None):
+    if client is not None:
+        return client
+    if token is not None:
+        return Github(token)
+    if ctx.get('github_client', None) is None:
+        ctx['github_client'] = Github(os.getenv("GITHUB_TOKEN"))
+
+    return ctx['github_client']
+
+    
 @xai_component
 class GithubAuthorize(Component):
     """Component to authorize GitHub client using a provided token or environment variables.
@@ -13,13 +25,7 @@ class GithubAuthorize(Component):
     client: OutArg[Github]
 
     def execute(self, ctx) -> None:
-        # Determine the GitHub token source
-        token = self.token.value or os.getenv("GITHUB_TOKEN")
-        if not token:
-            raise ValueError("GITHUB_TOKEN is required.")
-        
-        # Create an authenticated GitHub client
-        self.client.value = Github(token)
+        self.client.value = get_github_client(client=None, token=self.token.value)
         ctx['github_client'] = self.client.value
         
 
