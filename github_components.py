@@ -25,8 +25,7 @@ class GithubAuthorize(Component):
     client: OutArg[Github]
 
     def execute(self, ctx) -> None:
-        self.client.value = get_github_client(client=None, token=self.token.value)
-        ctx['github_client'] = self.client.value
+        self.client.value = get_github_client(ctx, client=None, token=self.token.value)
         
 
 @xai_component
@@ -45,7 +44,7 @@ class GithubListIssues(Component):
     issues: OutArg[list]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         self.issues.value = [issue.title for issue in repo.get_issues()]
 
@@ -67,7 +66,7 @@ class GithubGetIssue(Component):
     issue: OutArg[dict]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         self.issue.value = repo.get_issue(self.issue_number.value).raw_data
 
@@ -91,7 +90,7 @@ class GithubCreateIssue(Component):
     issue: OutArg[dict]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         new_issue = repo.create_issue(title=self.title.value, body=self.body.value)
         self.issue.value = new_issue.raw_data
@@ -112,7 +111,7 @@ class GithubListPullRequests(Component):
     pull_requests: OutArg[list]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         self.pull_requests.value = [pr.title for pr in repo.get_pull_requests()]
 
@@ -140,7 +139,7 @@ class GithubCreatePullRequest(Component):
     pull_request: OutArg[dict]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         new_pr = repo.create_pull(title=self.title.value, body=self.body.value, head=self.head.value, base=self.base.value)
         self.pull_request.value = new_pr.raw_data
@@ -163,7 +162,7 @@ class GithubReadPullRequestComments(Component):
     comments: OutArg[list]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         pr = repo.get_pull(self.pull_request_number.value)
         self.comments.value = [comment.body for comment in pr.get_review_comments()]
@@ -188,7 +187,7 @@ class GithubAddPullRequestComment(Component):
     success: OutArg[bool]
 
     def execute(self, ctx) -> None:
-        client = ctx['github_client']
+        client = get_github_client(ctx, client=self.client.value)
         repo = client.get_repo(self.repo_name.value)
         pr = repo.get_pull(self.pull_request_number.value)
         pr.create_issue_comment(self.comment.value)
