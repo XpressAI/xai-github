@@ -26,7 +26,7 @@ class GithubAuthorize(Component):
 
     def execute(self, ctx) -> None:
         self.client.value = get_github_client(ctx, client=None, token=self.token.value)
-        
+        ctx['github_client'] = self.client.value
 
 @xai_component
 class GithubListIssues(Component):
