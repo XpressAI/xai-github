@@ -16,11 +16,12 @@ class GithubAuthorize(Component):
         # Get GitHub token from self.token.value if provided, otherwise from environment variable
         token = self.token.value if self.token.value else os.getenv("GITHUB_TOKEN")
         if not token:
-            raise ValueError("GITHUB_TOKEN environment variable is not set.")
+            raise ValueError("GITHUB_TOKEN is required.")
         
         # Create an authenticated GitHub client
         self.client.value = Github(token)
         ctx['github_client'] = self.client.value
+        
 
 @xai_component
 class GithubListIssues(Component):
