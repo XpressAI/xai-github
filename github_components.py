@@ -4,7 +4,7 @@ from github import Github
 
 @xai_component
 class GithubAuthorize(Component):
-    """Component to authorize GitHub client using environment variables.
+    """Component to authorize GitHub client using a provided token or environment variables.
 
     ##### outPorts:
     - client (Github): The authenticated GitHub client.
@@ -13,8 +13,8 @@ class GithubAuthorize(Component):
     client: OutArg[Github]
 
     def execute(self, ctx) -> None:
-        # Get GitHub token from self.token.value if provided, otherwise from environment variable
-        token = self.token.value if self.token.value else os.getenv("GITHUB_TOKEN")
+        # Determine the GitHub token source
+        token = self.token.value or os.getenv("GITHUB_TOKEN")
         if not token:
             raise ValueError("GITHUB_TOKEN is required.")
         
