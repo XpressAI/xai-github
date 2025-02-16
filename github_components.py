@@ -20,6 +20,7 @@ class GithubAuthorize(Component):
         
         # Create an authenticated GitHub client
         self.client.value = Github(token)
+        # save this client instance into ctx. AI!
 
 @xai_component
 class GithubListIssues(Component):
