@@ -8,6 +8,10 @@ readme = "README.md"
 repository = "https://github.com/xpressai/xai-github"
 keywords = ["xircuits", "github"]
 
+dependencies = [
+    "PyGithub==2.5.0",
+]
+
 # Xircuits-specific configurations
 [tool.xircuits]
 requirements_path = "requirements.txt"
